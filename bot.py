@@ -1,8 +1,8 @@
 import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# Токен беремо з середовища (Environment Variables на Render)
+# Токен беремо з Environment Variables (Render -> Environment -> TOKEN)
 TOKEN = os.getenv("TOKEN")
 
 # Список каналів, на які користувач має підписатись
@@ -17,7 +17,7 @@ CHANNELS = [
 MAIN_CHANNEL = "https://t.me/+tIahvP6bf3xjNGIy"
 
 
-def start(update: Update, context: CallbackContext):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обробник команди /start"""
     keyboard = [
         [InlineKeyboardButton(f"{i+1}️⃣ Підписатися на канал", url=url)]
@@ -26,30 +26,28 @@ def start(update: Update, context: CallbackContext):
     keyboard.append([InlineKeyboardButton("✅ Я підписався", callback_data="done")])
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text(
+    await update.message.reply_text(
         "Привіт! 👋\n\nПідпишись на всі канали і натисни '✅ Я підписався', щоб отримати доступ.",
         reply_markup=reply_markup
     )
 
 
-def check_done(update: Update, context: CallbackContext):
+async def check_done(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обробник кнопки '✅ Я підписався'"""
     query = update.callback_query
-    query.answer()
-    query.edit_message_text(f"🎉 Дякую! Ось головний канал:\n{MAIN_CHANNEL}")
+    await query.answer()
+    await query.edit_message_text(f"🎉 Дякую! Ось головний канал:\n{MAIN_CHANNEL}")
 
 
 def main():
     """Запуск бота"""
-    updater = Updater(TOKEN)
-    dp = updater.dispatcher
+    app = ApplicationBuilder().token(TOKEN).build()
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CallbackQueryHandler(check_done, pattern="done"))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CallbackQueryHandler(check_done, pattern="done"))
 
     print("✅ Бот запущений і працює...")
-    updater.start_polling()
-    updater.idle()
+    app.run_polling()
 
 
 if __name__ == "__main__":
