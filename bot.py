@@ -1,7 +1,9 @@
-import os
+#import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+import asyncio
 
+# Токен з Render
 TOKEN = os.getenv("TOKEN")
 
 CHANNELS = [
@@ -12,6 +14,7 @@ CHANNELS = [
 ]
 
 MAIN_CHANNEL = "https://t.me/+tIahvP6bf3xjNGIy"
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
@@ -26,18 +29,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
+
 async def check_done(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(f"🎉 Дякую! Ось головний канал:\n{MAIN_CHANNEL}")
 
-def main():
+
+async def main():
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(check_done, pattern="done"))
 
     print("✅ Бот запущено і працює...")
-    app.run_polling()
+    await app.run_polling()
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
