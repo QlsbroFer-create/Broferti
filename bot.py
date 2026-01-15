@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 import asyncio
 
-# Токен з Render
+# Токен з Render (Environment Variable)
 TOKEN = os.getenv("TOKEN")
 
 CHANNELS = [
