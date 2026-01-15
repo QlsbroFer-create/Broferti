@@ -1,11 +1,16 @@
 import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    CallbackQueryHandler,
+    ContextTypes
+)
 
-# Токен беремо з Environment Variables (Render -> Environment -> TOKEN)
+# Отримуємо токен із середовища (Environment Variable на Render)
 TOKEN = os.getenv("TOKEN")
 
-# Список каналів, на які користувач має підписатись
+# Список каналів, на які користувач повинен підписатися
 CHANNELS = [
     "https://t.me/+vaxfVihm3C05ODYy",
     "https://t.me/+2mRsSn0SWUYyNDUy",
@@ -18,7 +23,7 @@ MAIN_CHANNEL = "https://t.me/+tIahvP6bf3xjNGIy"
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Обробник команди /start"""
+    """Команда /start"""
     keyboard = [
         [InlineKeyboardButton(f"{i+1}️⃣ Підписатися на канал", url=url)]
         for i, url in enumerate(CHANNELS)
@@ -33,7 +38,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def check_done(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Обробник кнопки '✅ Я підписався'"""
+    """Кнопка '✅ Я підписався'"""
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(f"🎉 Дякую! Ось головний канал:\n{MAIN_CHANNEL}")
