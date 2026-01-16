@@ -1,23 +1,25 @@
 import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import (
+    ApplicationBuilder, CommandHandler,
+    CallbackQueryHandler, ContextTypes
+)
 
-# 🔐 Токен беремо із середовища Render
+# Отримуємо токен із змінних середовища
 TOKEN = os.getenv("TOKEN")
 
-# 📢 Список каналів
+# Список каналів, на які потрібно підписатися
 CHANNELS = [
-    "https://t.me/vxakFvINa3CSOOsy",
-    "https://t.me/2smSi4WNYn0DjY",
-    "https://t.me/W0dA80_gWEhG0D2L",
-    "https://t.me/WhsK8FbNd-jPJ6MEy"
+    "https://t.me/+vaxfVihm3C05ODYy",
+    "https://t.me/+2mRsSn0SWUYyNDUy",
+    "https://t.me/+OW0A0_gW6EthODZi",
+    "https://t.me/+WwsK8FNhJ-pjMGEy"
 ]
 
-# 🌟 Основний канал
-MAIN_CHANNEL = "https://t.me/+tAhvPb6r3Jx3NGIy"
+# Основний канал
+MAIN_CHANNEL = "https://t.me/+2eELL_nHMMo1MWRi"
 
-
-# 🚀 Команда /start
+# Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [InlineKeyboardButton(f"✅ Підписатися на канал {i+1}", url=url)]
@@ -27,36 +29,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
-        "Привіт 👋!\n"
-        "Підпишись на всі канали та натисни ☑️ 'Я підписався', щоб отримати доступ.",
+        "👋 Привіт!\nПідпишись на всі канали нижче, а потім натисни «☑️ Я підписався», щоб отримати доступ:",
         reply_markup=reply_markup
     )
 
-
-# ✅ Обробка кнопки “Я підписався”
+# Обробка натискання "Я підписався"
 async def check_done(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
-        f"Дякую ❤️! Ось головний канал:\n👉 {MAIN_CHANNEL}"
+        f"🎉 Дякую! Тепер можеш перейти в головний канал:\n👉 {MAIN_CHANNEL}"
     )
 
-
-# ⚙️ Основна функція запуску
+# Основна функція
 def main():
-    print("🚀 Запуск Telegram-бота...")
-
-    if not TOKEN:
-        raise ValueError("❌ Токен не знайдено! Додай змінну TOKEN у Render Environment.")
-
-    app = Application.builder().token(TOKEN).build()
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(check_done, pattern="done"))
 
-    print("✅ Бот працює! Готовий приймати команди.")
+    print("✅ Бот запущено і він працює!")
     app.run_polling()
-
 
 if __name__ == "__main__":
     main()
