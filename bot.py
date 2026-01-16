@@ -1,5 +1,4 @@
 import os
-import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
@@ -44,21 +43,20 @@ async def check_done(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ⚙️ Основна функція запуску
-async def main():
+def main():
     print("🚀 Запуск Telegram-бота...")
+
     if not TOKEN:
         raise ValueError("❌ Токен не знайдено! Додай змінну TOKEN у Render Environment.")
 
-    # Створюємо застосунок
     app = Application.builder().token(TOKEN).build()
 
-    # Обробники команд
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(check_done, pattern="done"))
 
     print("✅ Бот працює! Готовий приймати команди.")
-    await app.run_polling(close_loop=False)
+    app.run_polling()
 
 
-if  __name__ == "__main__":
-    asyncio.run(main())
+if __name__ == "__main__":
+    main()
