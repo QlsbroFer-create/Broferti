@@ -3,7 +3,7 @@ import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# 🔐 Токен беремо з Environment Variable (Render)
+# 🔐 Токен беремо із середовища Render
 TOKEN = os.getenv("TOKEN")
 
 # 📢 Список каналів
@@ -14,7 +14,7 @@ CHANNELS = [
     "https://t.me/WhsK8FbNd-jPJ6MEy"
 ]
 
-# 🌟 Головний канал
+# 🌟 Основний канал
 MAIN_CHANNEL = "https://t.me/+tAhvPb6r3Jx3NGIy"
 
 
@@ -60,5 +60,5 @@ async def main():
     await app.run_polling(close_loop=False)
 
 
-if name == "main":
+if  __name__ == "__main__":
     asyncio.run(main())
